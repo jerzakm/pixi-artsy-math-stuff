@@ -1,13 +1,13 @@
-import * as PIXI from "pixi.js"
 import Viewport from "pixi-viewport"
 import "../src/_scss/main.scss"
-import * as r from './core/renderer'
+import * as renderer from './core/renderer'
 import * as Stats from 'stats.js'
 import * as Color from 'color'
+import { Container, Graphics } from "pixi.js";
 
-r.initRenderer()
+renderer.initRenderer()
 
-const gridSize = 15
+const gridSize = 64
 
 
 const cellSize = 60
@@ -23,10 +23,12 @@ const yPointCircles: number[] = []
 
 const curves: boolean[][] = []
 
-const g = new PIXI.Graphics()
+const graphicsContainer = new Container()
+
+const g = new Graphics()
 g.position.x = 50
 g.position.y = 50
-r.stage.addChild(g)
+renderer.stage.addChild(g)
 
 var stats = new Stats.default();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
@@ -46,8 +48,8 @@ for (let x = 0; x < gridSize * (cellSize + cellMargin); x++) {
 
 const shapeCanvas = document.createElement('canvas')
 document.body.appendChild(shapeCanvas)
-shapeCanvas.width = r.renderer.width
-shapeCanvas.height = r.renderer.height
+shapeCanvas.width = renderer.renderer.width
+shapeCanvas.height = renderer.renderer.height
 shapeCanvas.style.position = 'fixed'
 shapeCanvas.style.top = '0'
 shapeCanvas.style.left = '0'
@@ -57,11 +59,11 @@ const context = shapeCanvas.getContext('2d')
 
 let color = Color.rgb(200, 30, 0)
 
-function animate() {
+renderer.ticker.add((delta) => {
     stats.begin()
 
     for (let i = 0; i < xPointCircles.length; i++) {
-        xPointCircles[i] += rotationSpeed * (i + 1) //* Math.sin(Math.PI / (i + 1))
+        xPointCircles[i] += rotationSpeed * (i + 1)
         yPointCircles[i] += rotationSpeed * (i + 1)
     }
 
@@ -75,10 +77,31 @@ function animate() {
 
 
     stats.end()
+})
 
-    requestAnimationFrame(animate);
+// function animate() {
+//     stats.begin()
 
-}
+//     for (let i = 0; i < xPointCircles.length; i++) {
+//         xPointCircles[i] += rotationSpeed * (i + 1) //* Math.sin(Math.PI / (i + 1))
+//         yPointCircles[i] += rotationSpeed * (i + 1)
+//     }
+
+//     g.clear()
+
+//     drawLeadingCircles()
+//     drawGrid()
+//     drawPointCircles()
+//     // drawCurves()
+//     color = color.rotate(0.05)
+
+
+//     stats.end()
+
+//     requestAnimationFrame(animate);
+
+// }
+// requestAnimationFrame(animate);
 
 function drawLeadingCircles() {
     g.lineStyle(1, 0xAAAAAA)
@@ -158,7 +181,6 @@ function polarCoords(r: number, angle: number) {
     }
 }
 
-requestAnimationFrame(animate);
 
 interface Point {
     x: number,
