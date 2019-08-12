@@ -9,16 +9,6 @@
     "bs": "browser-sync dist -w",
     "start": "concurrently \"npm:webpack\" \"npm:bs\""
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jerzakm/hexed-realms.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/jerzakm/hexed-realms/issues"
-  },
-  "homepage": "https://github.com/jerzakm/hexed-realms#readme",
   "dependencies": {
     "@types/color": "^3.0.0",
     "@types/stats.js": "^0.17.0",
