@@ -1,4 +1,3 @@
-import Viewport from "pixi-viewport"
 import "../src/_scss/main.scss"
 import * as renderer from './core/renderer'
 import * as Stats from 'stats.js'
@@ -7,16 +6,16 @@ import { Container, Graphics } from "pixi.js";
 
 renderer.initRenderer()
 
-const gridSize = 64
+const gridSize = 10
 
 
-const cellSize = 60
+const cellSize = 80
 const cellMargin = cellSize / 4
 
 const leadingCircleR = cellSize / 2
 const pointCircleR = 5
 
-const rotationSpeed = 0.003
+const rotationSpeed = 0.0015
 
 const xPointCircles: number[] = []
 const yPointCircles: number[] = []
@@ -73,35 +72,12 @@ renderer.ticker.add((delta) => {
     drawGrid()
     drawPointCircles()
     // drawCurves()
-    color = color.rotate(0.05)
+    color = color.rotate(rotationSpeed*10)
 
 
     stats.end()
 })
 
-// function animate() {
-//     stats.begin()
-
-//     for (let i = 0; i < xPointCircles.length; i++) {
-//         xPointCircles[i] += rotationSpeed * (i + 1) //* Math.sin(Math.PI / (i + 1))
-//         yPointCircles[i] += rotationSpeed * (i + 1)
-//     }
-
-//     g.clear()
-
-//     drawLeadingCircles()
-//     drawGrid()
-//     drawPointCircles()
-//     // drawCurves()
-//     color = color.rotate(0.05)
-
-
-//     stats.end()
-
-//     requestAnimationFrame(animate);
-
-// }
-// requestAnimationFrame(animate);
 
 function drawLeadingCircles() {
     g.lineStyle(1, 0xAAAAAA)
@@ -167,8 +143,10 @@ function drawPointCircles() {
     for (const x of testPoints) {
         for (const drawingPoint of x) {
             g.drawCircle(drawingPoint.x, drawingPoint.y, 2)
-            context.fillStyle = color.hex()
-            context.fillRect(drawingPoint.x + g.position.x, drawingPoint.y + g.position.y, 1, 1)
+            if(context){
+                context.fillStyle = color.hex()
+                context.fillRect(drawingPoint.x + g.position.x, drawingPoint.y + g.position.y, 1, 1)
+            }
         }
     }
     g.endFill()
