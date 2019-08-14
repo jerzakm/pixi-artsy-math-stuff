@@ -1,5 +1,5 @@
 {
-  "name": "hexed-realms",
+  "name": "pixi-artsy-math-stuff",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -40,5 +40,15 @@
     "webpack": "^4.29.6",
     "webpack-cli": "^3.3.0",
     "webpack-dev-server": "^3.2.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jerzakm/pixi-lissajous-curve-table.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jerzakm/pixi-lissajous-curve-table/issues"
+  },
+  "homepage": "https://github.com/jerzakm/pixi-lissajous-curve-table#readme"
 }
