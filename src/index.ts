@@ -5,7 +5,7 @@ import * as Color from 'color'
 import { Container, Graphics } from "pixi.js";
 import { polarCoords, Point } from './math/coordMath'
 import { ILissajousTableOptions, LissajousTable } from "./01_lissajous/LissajousTable";
-import { PolygonCutting, ICuttablePolygon } from "./02_polygonCutting/PolygonCutting";
+import { CirclePacking } from "./02_circlePacking/CirclePacking";
 
 renderer.initRenderer()
 
@@ -13,48 +13,41 @@ var stats = new Stats.default();
 stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.appendChild(stats.dom);
 
+const helperCanvas = document.createElement('canvas')
+document.body.appendChild(helperCanvas)
+helperCanvas.width = renderer.renderer.width
+helperCanvas.height = renderer.renderer.height
+helperCanvas.style.position = 'fixed'
+helperCanvas.style.top = '0'
+helperCanvas.style.left = '0'
 
-const shapeCanvas = document.createElement('canvas')
-document.body.appendChild(shapeCanvas)
-shapeCanvas.width = renderer.renderer.width
-shapeCanvas.height = renderer.renderer.height
-shapeCanvas.style.position = 'fixed'
-shapeCanvas.style.top = '0'
-shapeCanvas.style.left = '0'
+/// LISSAJOUS SETUP
 
-const options:ILissajousTableOptions = {
-    gridSize: 25,
-    cellSize: 48,
-    pointCircleR:5,
-    rotationSpeed: 0.0015,
-    helperCanvas: shapeCanvas
-}
+// const options: ILissajousTableOptions = {
+//     gridSize: 25,
+//     cellSize: 48,
+//     pointCircleR: 5,
+//     rotationSpeed: 0.0015,
+//     helperCanvas: shapeCanvas
+// }
 
 // const lissajousTable = new LissajousTable(options)
 // lissajousTable.x = 50
 // lissajousTable.y = 50
 // renderer.stage.addChild(lissajousTable)
 
-const polygons: ICuttablePolygon[] = []
+// CIRCLE PACKING SETUP
 
-polygons.push({
-    points: [
-        200,200,
-        200,400,
-        600,300
-    ],
-    color: Color.rgb(200, 30, 0)
-})
+const circlePacking = new CirclePacking()
+renderer.stage.addChild(circlePacking)
 
-const polyCutting = new PolygonCutting(polygons)
-renderer.stage.addChild(polyCutting)
-polyCutting.draggingSetup()
 
 renderer.ticker.add((delta) => {
     stats.begin()
 
     // lissajousTable.animate()
-    polyCutting.animate()
-    
+
+    circlePacking.animate(delta)
+
     stats.end()
 })
