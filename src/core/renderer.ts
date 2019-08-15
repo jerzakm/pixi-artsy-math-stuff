@@ -11,10 +11,12 @@ export function initRenderer() {
     {
       width: window.innerWidth,
       height: window.innerHeight,
-      backgroundColor: 0x121212,
+      backgroundColor: 0x7777777,
       forceFXAA: false,
       antialias: true,
-      powerPreference: 'high-performance'
+      powerPreference: 'high-performance',
+      clearBeforeRender: true,
+      preserveDrawingBuffer: false
     }
   )
 

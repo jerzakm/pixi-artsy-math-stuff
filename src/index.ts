@@ -7,6 +7,8 @@ import { polarCoords, Point } from './math/coordMath'
 import { ILissajousTableOptions, LissajousTable } from "./01_lissajous/LissajousTable";
 import { CirclePacking } from "./02_circlePacking/CirclePacking";
 
+import * as PIXI from 'pixi.js'
+
 renderer.initRenderer()
 
 var stats = new Stats.default();
@@ -20,6 +22,9 @@ helperCanvas.height = renderer.renderer.height
 helperCanvas.style.position = 'fixed'
 helperCanvas.style.top = '0'
 helperCanvas.style.left = '0'
+
+PIXI.GraphicsGeometry.BATCHABLE_SIZE = 500
+PIXI.settings.ROUND_PIXELS = true
 
 /// LISSAJOUS SETUP
 
