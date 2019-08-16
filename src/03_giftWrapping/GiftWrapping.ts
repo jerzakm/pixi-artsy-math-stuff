@@ -1,5 +1,5 @@
-import { Container, Graphics } from "pixi.js";
-import { Point, findPointWithAngle } from "../math/coordMath";
+import { Container, Graphics, Text } from "pixi.js";
+import { Point, findPointWithAngle, calcAngleBetweenPoints } from "../math/coordMath";
 
 export class GiftWrapping extends Container {
     pointArray: Point[]
@@ -9,6 +9,7 @@ export class GiftWrapping extends Container {
     hull: Point[]
     g: Graphics
     wrapAngle: number
+    labels: Text[]
 
     constructor(maxWidth: number, maxHeight: number, pointCount: number){
         super()
@@ -18,6 +19,7 @@ export class GiftWrapping extends Container {
         this.maxHeight = maxHeight
         this.pointCount = pointCount
         this.g = new Graphics()
+        this.labels = []
         this.addChild(this.g)
         this.populate()
         this.findOrigin()
@@ -63,14 +65,26 @@ export class GiftWrapping extends Container {
     }
 
     private wrap(){
-        const armSize = 800
-        const current = this.hull[this.hull.length-1]
-        const last = this.hull.length>1 ? this.hull[this.hull.length] : {x: this.hull[0].x, y:this.hull[0].y+armSize}        
+        if(this.labels.length!= this.pointArray.length) {
+            const p1 = this.pointArray[0]
+            for(const p of this.pointArray){
+                const angle = calcAngleBetweenPoints(p1,p)
+                const basicText = new Text(`${angle.toFixed(1)}`, {fontSize: 12});
+                basicText.x = p.x;
+                basicText.y = p.y;
+                this.labels.push(basicText)
+                this.addChild(basicText)
+            }            
+        }        
+        
+        // const armSize = 800
+        // const current = this.hull[this.hull.length-1]
+        // const last = this.hull.length>1 ? this.hull[this.hull.length] : {x: this.hull[0].x, y:this.hull[0].y+armSize}        
 
-        const lastAngled = findPointWithAngle(last, this.wrapAngle, armSize)
-        this.wrapAngle -= 0.25
+        // const lastAngled = findPointWithAngle(last, this.wrapAngle, armSize)
+        // this.wrapAngle -= 0.25
 
-        this.g.moveTo(current.x, current.y)
-        this.g.lineTo(lastAngled.x, lastAngled.y)
+        // this.g.moveTo(current.x, current.y)
+        // this.g.lineTo(lastAngled.x, lastAngled.y)
     }
 }
