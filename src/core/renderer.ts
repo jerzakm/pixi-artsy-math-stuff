@@ -16,24 +16,22 @@ export function initRenderer() {
       antialias: true,
       powerPreference: 'high-performance',
       clearBeforeRender: true,
-      preserveDrawingBuffer: false
+      preserveDrawingBuffer: false      
     }
   )
 
   ticker = new PIXI.Ticker()
-  ticker.maxFPS = 60
+  ticker.maxFPS = 144
 
   stage = new PIXI.Container();
 
   ticker.add(() => {
     renderer.render(stage)
-  }, PIXI.UPDATE_PRIORITY.LOW)
+  }, PIXI.UPDATE_PRIORITY.HIGH)
 
   ticker.start()
 
   document.body.appendChild(renderer.view)
 
   PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST
-
-  let app = new PIXI.Application()
 }

@@ -6,8 +6,7 @@ import { Container, Graphics } from "pixi.js";
 import { polarCoords, Point } from './math/coordMath'
 import { ILissajousTableOptions, LissajousTable } from "./01_lissajous/LissajousTable";
 import { CirclePacking } from "./02_circlePacking/CirclePacking";
-
-import * as PIXI from 'pixi.js'
+import { GiftWrapping } from "./03_giftWrapping/GiftWrapping";
 
 renderer.initRenderer()
 
@@ -23,17 +22,13 @@ helperCanvas.style.position = 'fixed'
 helperCanvas.style.top = '0'
 helperCanvas.style.left = '0'
 
-PIXI.GraphicsGeometry.BATCHABLE_SIZE = 500
-PIXI.settings.ROUND_PIXELS = true
-
-/// LISSAJOUS SETUP
-
+// LISSAJOUS SETUP
 // const options: ILissajousTableOptions = {
 //     gridSize: 25,
 //     cellSize: 48,
 //     pointCircleR: 5,
 //     rotationSpeed: 0.0015,
-//     helperCanvas: shapeCanvas
+//     helperCanvas: helperCanvas
 // }
 
 // const lissajousTable = new LissajousTable(options)
@@ -42,17 +37,24 @@ PIXI.settings.ROUND_PIXELS = true
 // renderer.stage.addChild(lissajousTable)
 
 // CIRCLE PACKING SETUP
+// const circlePacking = new CirclePacking()
+// circlePacking.x = 0
+// circlePacking.y = 0
+// renderer.stage.addChild(circlePacking)
 
-const circlePacking = new CirclePacking()
-renderer.stage.addChild(circlePacking)
 
+// GIFT WRAPPING SETUP
+const giftWrapping = new GiftWrapping(300, 300, 20)
+giftWrapping.x = 100
+giftWrapping.y = 100
+renderer.stage.addChild(giftWrapping)
 
 renderer.ticker.add((delta) => {
     stats.begin()
 
     // lissajousTable.animate()
-
-    circlePacking.animate(delta)
+    // circlePacking.animate(delta)
+    giftWrapping.animate(delta)
 
     stats.end()
 })

@@ -4,7 +4,7 @@ import { circlesIntersect } from "../math/circleMath";
 
 export class CirclePacking extends Container {
   circles: Circle[]
-  staticG: Graphics
+  // staticG: Graphics
   g: Graphics
   lastPop: number
   popFrequency: number
@@ -14,13 +14,11 @@ export class CirclePacking extends Container {
   constructor() {
     super()
     this.circles = []
-    this.staticG = new Graphics()
-    this.addChild(this.staticG)
-    this.g = new Graphics()
-    this.addChild(this.g)
     this.lastPop = 1
-    this.popFrequency = 0
-    this.popLimit = 5000
+    this.popFrequency = 10
+    this.popLimit = 500
+    this.g = new Graphics()
+    this.addChild(this.g)    
   }
 
   public animate(delta: number) {
@@ -60,9 +58,12 @@ export class CirclePacking extends Container {
     for (const circle of this.circles) {
       this.g.drawCircle(circle.x, circle.y, circle.r)
     }
+    this.g.endFill()
   }
 
   private populate() {
+    // console.log(this.circles)
+    //todo - add different strategy for picking a free spot when random regression becomes too expensive
     if (this.popLimit && this.circles.length < this.popLimit) {
       const x = Math.random() * screen.width
       const y = Math.random() * screen.height
