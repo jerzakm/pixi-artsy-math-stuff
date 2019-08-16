@@ -1,5 +1,5 @@
 import { Container, Graphics } from "pixi.js";
-import { Point } from "../math/coordMath";
+import { Point, findPointWithAngle } from "../math/coordMath";
 
 export class GiftWrapping extends Container {
     pointArray: Point[]
@@ -8,6 +8,7 @@ export class GiftWrapping extends Container {
     pointCount: number
     hull: Point[]
     g: Graphics
+    wrapAngle: number
 
     constructor(maxWidth: number, maxHeight: number, pointCount: number){
         super()
@@ -20,6 +21,7 @@ export class GiftWrapping extends Container {
         this.addChild(this.g)
         this.populate()
         this.findOrigin()
+        this.wrapAngle = 0
     }
 
     private populate(){
@@ -35,6 +37,7 @@ export class GiftWrapping extends Container {
         this.g.clear()
         this.drawPoints()
         this.drawHull()
+        this.wrap()
     }
 
     private findOrigin(){
@@ -60,10 +63,14 @@ export class GiftWrapping extends Container {
     }
 
     private wrap(){
+        const armSize = 800
+        const current = this.hull[this.hull.length-1]
+        const last = this.hull.length>1 ? this.hull[this.hull.length] : {x: this.hull[0].x, y:this.hull[0].y+armSize}        
 
+        const lastAngled = findPointWithAngle(last, this.wrapAngle, armSize)
+        this.wrapAngle -= 0.25
+
+        this.g.moveTo(current.x, current.y)
+        this.g.lineTo(lastAngled.x, lastAngled.y)
     }
-}
-
-enum Side {
-    TOP, BOTTOM, LEFT, RIGHT
 }
