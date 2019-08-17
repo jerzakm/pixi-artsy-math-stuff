@@ -15,10 +15,10 @@ export class CirclePacking extends Container {
     super()
     this.circles = []
     this.lastPop = 1
-    this.popFrequency = 10
+    this.popFrequency = 1
     this.popLimit = 500
     this.g = new Graphics()
-    this.addChild(this.g)    
+    this.addChild(this.g)
   }
 
   public animate(delta: number) {
@@ -37,7 +37,7 @@ export class CirclePacking extends Container {
           }
         }
         if (!intersect) {
-          circle.grow()
+          circle.grow(2)
         }
       }
     }

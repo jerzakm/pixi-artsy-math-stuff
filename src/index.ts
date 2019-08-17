@@ -1,7 +1,6 @@
 import "../src/_scss/main.scss"
 import * as renderer from './core/renderer'
 import * as Stats from 'stats.js'
-import * as Color from 'color'
 import { Container, Graphics } from "pixi.js";
 import { polarCoords, Point } from './math/coordMath'
 import { ILissajousTableOptions, LissajousTable } from "./01_lissajous/LissajousTable";
@@ -44,7 +43,7 @@ helperCanvas.style.left = '0'
 
 
 // GIFT WRAPPING SETUP
-const giftWrapping = new GiftWrapping(300, 300, 20)
+const giftWrapping = new GiftWrapping(300, 300, 15)
 giftWrapping.x = 100
 giftWrapping.y = 100
 renderer.stage.addChild(giftWrapping)
