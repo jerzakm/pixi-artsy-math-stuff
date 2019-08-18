@@ -19,6 +19,7 @@ export class GiftWrapping extends Container {
     g: Graphics
     lastWrap: number
     wrapSearchLine: Line
+    wrappingDone: boolean
 
     constructor(maxWidth: number, maxHeight: number, pointCount: number) {
         super()
@@ -30,6 +31,7 @@ export class GiftWrapping extends Container {
 
         this.wrapSearchLine = { from: { x: 0, y: 0 }, to: { x: 0, y: 0 } }
         this.lastWrap = 0
+        this.wrappingDone = false
 
 
         this.addChild(this.g)
@@ -54,7 +56,7 @@ export class GiftWrapping extends Container {
     }
 
     public animate(delta: number) {
-        this.lastWrap > 1 ? this.wrap() : this.lastWrap += delta
+        this.lastWrap > 1 && !this.wrappingDone ? this.wrap() : this.lastWrap += delta
 
         this.g.clear()
         this.drawPoints()
@@ -79,14 +81,21 @@ export class GiftWrapping extends Container {
 
     private drawHull() {
         this.g.lineStyle(2, 0xFF1212)
-        for (const point of this.hull) {
-            this.g.drawCircle(point.x, point.y, 7)
+        if (this.hull.length > 1) {
+            for (let i = 0; i < this.hull.length - 1; i++) {
+                this.g.moveTo(this.hull[i + 1].x, this.hull[i + 1].y)
+                this.g.lineTo(this.hull[i].x, this.hull[i].y)
+            }
+            if (this.wrappingDone) {
+                this.g.moveTo(this.hull[this.hull.length - 1].x, this.hull[this.hull.length - 1].y)
+                this.g.lineTo(this.hull[0].x, this.hull[0].y)
+            }
         }
         this.g.lineStyle(0)
     }
 
     private drawSearchLine() {
-        this.g.lineStyle(2, 0x99FF99)
+        this.wrappingDone ? this.g.lineStyle(0, 0x99FF99) : this.g.lineStyle(2, 0x99FF99)
         this.g.moveTo(this.wrapSearchLine.from.x, this.wrapSearchLine.from.y)
         this.g.lineTo(this.wrapSearchLine.to.x, this.wrapSearchLine.to.y)
         this.g.lineStyle(0)
@@ -132,7 +141,6 @@ export class GiftWrapping extends Container {
             },
         )
         const cross = vectorCrossProduct(a, b)
-        console.log(cross)
 
         if (cross.z < 0) {
             this.nextVertex = checking
@@ -141,7 +149,7 @@ export class GiftWrapping extends Container {
         this.index += 1;
         if (this.index == this.points.length) {
             if (this.nextVertex == this.leftMost) {
-                console.log('done');
+                this.wrappingDone = true
             } else {
                 this.hull.push(this.nextVertex);
                 this.currentVertex = this.nextVertex;

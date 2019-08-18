@@ -1,17 +1,17 @@
 import "../src/_scss/main.scss"
 import * as renderer from './core/renderer'
 import * as Stats from 'stats.js'
-import { Container, Graphics } from "pixi.js";
+import { Container, Graphics, GraphicsGeometry } from "pixi.js"
 import { polarCoords, Point } from './math/coordMath'
-import { ILissajousTableOptions, LissajousTable } from "./01_lissajous/LissajousTable";
-import { CirclePacking } from "./02_circlePacking/CirclePacking";
-import { GiftWrapping } from "./03_giftWrapping/GiftWrapping";
+import { ILissajousTableOptions, LissajousTable } from "./01_lissajous/LissajousTable"
+import { CirclePacking } from "./02_circlePacking/CirclePacking"
+import { GiftWrapping } from "./03_giftWrapping/GiftWrapping"
 
 renderer.initRenderer()
 
-var stats = new Stats.default();
-stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
-document.body.appendChild(stats.dom);
+var stats = new Stats.default()
+stats.showPanel(0)
+document.body.appendChild(stats.dom)
 
 const helperCanvas = document.createElement('canvas')
 document.body.appendChild(helperCanvas)
@@ -20,6 +20,7 @@ helperCanvas.height = renderer.renderer.height
 helperCanvas.style.position = 'fixed'
 helperCanvas.style.top = '0'
 helperCanvas.style.left = '0'
+
 
 // LISSAJOUS SETUP
 // const options: ILissajousTableOptions = {

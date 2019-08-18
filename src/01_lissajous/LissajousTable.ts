@@ -16,7 +16,7 @@ export class LissajousTable extends Container {
         this.xPointCircles = []
         this.yPointCircles = []
         this.g = new Graphics()
-        this.addChild(this.g)
+        // this.addChild(this.g)
         this.setup()
     }
 
