@@ -6,6 +6,7 @@ import { polarCoords, Point } from './math/coordMath'
 import { ILissajousTableOptions, LissajousTable } from "./01_lissajous/LissajousTable"
 import { CirclePacking } from "./02_circlePacking/CirclePacking"
 import { GiftWrapping } from "./03_giftWrapping/GiftWrapping"
+import { Windmill } from "./04_windMill/Windmill";
 
 renderer.initRenderer()
 
@@ -44,17 +45,23 @@ helperCanvas.style.left = '0'
 
 
 // GIFT WRAPPING SETUP
-const giftWrapping = new GiftWrapping(300, 300, 15)
-giftWrapping.x = 100
-giftWrapping.y = 100
-renderer.stage.addChild(giftWrapping)
+// const giftWrapping = new GiftWrapping(300, 300, 15)
+// giftWrapping.x = 100
+// giftWrapping.y = 100
+// renderer.stage.addChild(giftWrapping)
+
+const windmill = new Windmill(4)
+renderer.stage.addChild(windmill)
+windmill.x = 100
+windmill.y = 50
 
 renderer.ticker.add((delta) => {
     stats.begin()
 
     // lissajousTable.animate()
     // circlePacking.animate(delta)
-    giftWrapping.animate(delta)
+    // giftWrapping.animate(delta)
+    windmill.animate(delta)
 
     stats.end()
 })
