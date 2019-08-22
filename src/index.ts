@@ -1,12 +1,13 @@
 import "../src/_scss/main.scss"
 import * as renderer from './core/renderer'
 import * as Stats from 'stats.js'
-import { Container, Graphics, GraphicsGeometry } from "pixi.js"
+import { Container, Graphics, GraphicsGeometry, RENDERER_TYPE } from "pixi.js"
 import { polarCoords, Point } from './math/coordMath'
 import { ILissajousTableOptions, LissajousTable } from "./01_lissajous/LissajousTable"
 import { CirclePacking } from "./02_circlePacking/CirclePacking"
 import { GiftWrapping } from "./03_giftWrapping/GiftWrapping"
 import { Windmill } from "./04_windMill/Windmill";
+import { RadarFragment } from "./05_radarFragment/RadarFragment";
 
 renderer.initRenderer()
 
@@ -50,10 +51,15 @@ helperCanvas.style.left = '0'
 // giftWrapping.y = 100
 // renderer.stage.addChild(giftWrapping)
 
-const windmill = new Windmill(7)
-renderer.stage.addChild(windmill)
-windmill.x = 100
-windmill.y = 50
+// const windmill = new Windmill(7)
+// renderer.stage.addChild(windmill)
+// windmill.x = 100
+// windmill.y = 50
+
+const radar = new RadarFragment(window.innerHeight/2-50, 5)
+radar.x = 100
+radar.y = 50
+renderer.stage.addChild(radar)
 
 renderer.ticker.add((delta) => {
     stats.begin()
@@ -61,7 +67,8 @@ renderer.ticker.add((delta) => {
     // lissajousTable.animate()
     // circlePacking.animate(delta)
     // giftWrapping.animate(delta)
-    windmill.animate(delta)
+    // windmill.animate(delta)
+    radar.animate(delta)
 
     stats.end()
 })
