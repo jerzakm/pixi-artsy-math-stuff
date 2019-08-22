@@ -63,10 +63,11 @@ export class RadarFragment extends Container{
 
     private calcMovement(){
         const f = this.segments.filter(s => s.angle < this.angleGoal)        
-        f.length == 0? this.angleGoal+=90 : false
+        f.length == 0? this.angleGoal+=45 : false
         for(let i = 0; i< this.segments.length; i++) {
             const s = this.segments[i]
             s.angle < this.angleGoal? s.angle+=2**i : s.angle = s.angle       
+            s.angle > this.angleGoal? s.angle = this.angleGoal : false
         }
         for(const s of this.segments){
             
