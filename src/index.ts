@@ -50,7 +50,7 @@ helperCanvas.style.left = '0'
 // giftWrapping.y = 100
 // renderer.stage.addChild(giftWrapping)
 
-const windmill = new Windmill(4)
+const windmill = new Windmill(7)
 renderer.stage.addChild(windmill)
 windmill.x = 100
 windmill.y = 50

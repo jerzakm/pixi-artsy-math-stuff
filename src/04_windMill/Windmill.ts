@@ -1,11 +1,14 @@
-import { Container, Graphics } from "pixi.js";
-import { Point, findPointWithAngle, isPointInLineSegment } from "../math/coordMath";
+import { Container, Graphics, Text } from "pixi.js";
+import { Point, findPointWithAngle, isPointInLineSegment, calcAngleBetweenPoints } from "../math/coordMath";
+import { vectorCrossProduct, vectorSubtract } from "../math/vectorMath";
 
 export class Windmill extends Container {
   points: Point[]
   pointCount: number
   maxWidth: number
   maxHeight: number
+
+  labels: Text[]
 
   g: Graphics
 
@@ -23,15 +26,23 @@ export class Windmill extends Container {
     this.maxHeight = 500
     this.maxWidth = 900
 
+    this.labels = []
     this.populate()
   }
 
   private populate() {
     for (let i = 0; i < this.pointCount; i++) {
-      this.points.push({
+      const newPoint = {
         x: Math.floor(Math.random() * this.maxWidth),
-        y: Math.floor(Math.random() * this.maxHeight),
-      })
+        y: Math.floor(Math.random() * this.maxHeight)
+      }
+      this.points.push(newPoint)
+
+      const label = new Text('label', {fill: '#FFFFFF', fontSize: 15})
+      label.x = newPoint.x + 10
+      label.y = newPoint.y
+      this.addChild(label)
+      this.labels.push(label)
     }
     this.points = this.points.sort((a, b) => {
       return a.x - b.x
@@ -61,15 +72,14 @@ export class Windmill extends Container {
     this.g.moveTo(from.x, from.y)
     this.g.lineTo(to.x, to.y)
     this.g.lineStyle(0)
-    for (let i = 0; i < this.points.length; i++) {
+    for (let i = 0; i < this.points.length; i++) {                  
       if (i != this.index) {
-        const hit = calcIsInsideThickLineSegment(from, to, this.points[i], 2)
+        const hit = calcIsInsideThickLineSegment(from, to, this.points[i], 3)
         if (hit) {
-          console.log(hit)
-          this.index = i
+          this.index = i          
           break
         }
-      }
+      }      
     }
   }
 }
