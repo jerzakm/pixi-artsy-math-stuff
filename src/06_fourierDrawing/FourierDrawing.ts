@@ -2,15 +2,24 @@ import { Container, Graphics, interaction } from "pixi.js";
 import { discreteFourierTransform, IFourierTransform } from "../math/fourier";
 import { Point } from "../math/coordMath";
 import { drawing } from "./test";
+import * as Color from 'color'
+
+enum FourierState {
+  DRAWING, RENDERING
+}
 
 export class FourierDrawing extends Container {
   g: Graphics
   angl: number
   drawing: Point[]
   path: Point[]
+  colours: string[]
   fourierX: IFourierTransform[]
   fourierY: IFourierTransform[]
   debugCircles: Point[]
+  state: FourierState
+  color: Color
+  lineWidth: number
 
   constructor() {
     super()
@@ -21,8 +30,12 @@ export class FourierDrawing extends Container {
     this.path = []
     this.fourierX = []
     this.fourierY = []
+    this.state = FourierState.RENDERING
+    this.colours = []
+    this.lineWidth = 3
 
     this.debugCircles = []
+    this.color = Color.rgb(200, 30, 0)
 
     this.setup()
   }
@@ -31,7 +44,7 @@ export class FourierDrawing extends Container {
     const x: number[] = []
     const y: number[] = []
     const d = drawing
-    const step = 5
+    const step = 3
     for (let i = 0; i < d.length; i += step) {
       x.push(d[i].x)
       y.push(d[i].y)
@@ -58,32 +71,100 @@ export class FourierDrawing extends Container {
     this.g.endFill()
   }
 
+  private calculateFourierTransform() {
+    const x: number[] = []
+    const y: number[] = []
+
+    let smallestX
+    let largestX
+    let smallestY
+    let largetstY
+
+
+    for (let i = 0; i < this.drawing.length; i++) {
+      x[i] = this.drawing[i].x
+      y[i] = this.drawing[i].y
+
+      !smallestX || x[i] < smallestX ? smallestX = x[i] : null
+      !smallestY || y[i] < smallestY ? smallestY = x[i] : null
+      !largestX || x[i] > largestX ? largestX = x[i] : null
+      !largetstY || y[i] > largetstY ? largetstY = x[i] : null
+    }
+
+    if (smallestX && smallestY && largestX && largetstY) {
+
+      for (let i = 0; i < this.drawing.length; i++) {
+        x[i] -= Math.abs(smallestX - largestX)
+        y[i] -= Math.abs(smallestY - largetstY)
+      }
+    }
+
+    this.path = []
+    this.fourierX = discreteFourierTransform(x)
+    this.fourierY = discreteFourierTransform(y)
+    this.fourierX.sort((a, b) => b.amp - a.amp)
+    this.fourierY.sort((a, b) => b.amp - a.amp)
+  }
+
   private drawStart(event: interaction.InteractionEvent) {
-    console.log('started drawing')
-    this.debugCircles.push(event.data.getLocalPosition(this.g))
-    console.log(this.debugCircles)
+    this.state = FourierState.DRAWING
+    const pos = event.data.getLocalPosition(this.g)
+    this.drawing = []
+    this.drawing.push({
+      x: pos.x,
+      y: pos.y
+    })
   }
 
-  private drawMove() {
-    console.log('moving drawiing')
+  private drawMove(event: interaction.InteractionEvent) {
+    if (this.state == FourierState.DRAWING) {
+      const pos = event.data.getLocalPosition(this.g)
+      if (this.drawing.length > 2) {
+        this.drawing.push({
+          x: (this.drawing[this.drawing.length - 1].x + pos.x) / 2,
+          y: (this.drawing[this.drawing.length - 1].y + pos.y) / 2,
+        })
+      }
+      this.drawing.push({
+        x: pos.x,
+        y: pos.y
+      })
+    }
   }
 
-  private drawEnd() {
-    console.log('drawing ended')
+  private drawEnd(event: interaction.InteractionEvent) {
+    if (this.state == FourierState.DRAWING) {
+      const pos = event.data.getLocalPosition(this.g)
+      this.drawing.push({
+        x: pos.x,
+        y: pos.y
+      })
+    }
+    this.calculateFourierTransform()
+    this.state = FourierState.RENDERING
+    this.angl = 0
   }
 
   public animate(delta: number) {
     this.g.clear()
-    this.drawFourier()
-    this.drawDebugCircles()
 
-    if (this.drawing.length > 1) {
-      this.g.lineStyle(1, 0xAAFF22)
+    if (this.color) {
+      this.color = this.color.rotate(3)
+    }
+
+    if (this.state === FourierState.RENDERING) {
+      this.drawFourier()
+    }
+
+    if (this.state === FourierState.DRAWING && this.drawing.length > 1) {
+      this.g.lineStyle(this.lineWidth, 0xAAFF22)
       this.g.moveTo(this.drawing[0].x, this.drawing[0].y)
       for (const point of this.drawing) {
         this.g.lineTo(point.x, point.y)
       }
+      this.g.lineStyle(0)
     }
+    this.drawDebugCircles()
   }
 
   private drawFourier() {
@@ -106,26 +187,25 @@ export class FourierDrawing extends Container {
     }
 
     this.path.push(drawPoint)
+    this.colours.push(this.color.hex().replace('#', '0x'))
 
-    this.path.length > this.fourierX.length ? this.path.pop() : false
+
+    if (this.path.length > this.fourierX.length) {
+      this.path.pop()
+      this.colours.pop()
+    }
 
     this.g.beginFill(0xFFAA12)
     this.g.drawCircle(vx.x, vx.y, 5)
     this.g.drawCircle(vy.x, vy.y, 5)
     this.g.endFill()
 
-    // const lineShift = 2 * 160
-
-    let started = false
-
-    this.g.lineStyle(1.2, 0xFFFFFF)
-    for (const point of this.path) {
-      if (!started) {
-        started = true
-        this.g.moveTo(point.x, point.y)
-      }
-      this.g.lineTo(point.x, point.y)
+    this.g.moveTo(this.path[0].x, this.path[0].y)
+    for (let i = 0; i < this.path.length - 1; i++) {
+      this.g.lineStyle(this.lineWidth, this.colours[i])
+      this.g.lineTo(this.path[i].x, this.path[i].y)
     }
+
     this.g.lineStyle(0)
   }
 
