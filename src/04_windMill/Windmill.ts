@@ -38,7 +38,7 @@ export class Windmill extends Container {
       }
       this.points.push(newPoint)
 
-      const label = new Text('label', {fill: '#FFFFFF', fontSize: 15})
+      const label = new Text('label', { fill: '#FFFFFF', fontSize: 15 })
       label.x = newPoint.x + 10
       label.y = newPoint.y
       this.addChild(label)
@@ -72,19 +72,19 @@ export class Windmill extends Container {
     this.g.moveTo(from.x, from.y)
     this.g.lineTo(to.x, to.y)
     this.g.lineStyle(0)
-    for (let i = 0; i < this.points.length; i++) {                  
+    for (let i = 0; i < this.points.length; i++) {
       if (i != this.index) {
         const hit = calcIsInsideThickLineSegment(from, to, this.points[i], 3)
         if (hit) {
-          this.index = i          
+          this.index = i
           break
         }
-      }      
+      }
     }
   }
 }
 
-function calcIsInsideThickLineSegment(line1, line2, pnt, lineThickness) {
+function calcIsInsideThickLineSegment(line1: Point, line2: Point, pnt: Point, lineThickness: number) {
   var L2 = (((line2.x - line1.x) * (line2.x - line1.x)) + ((line2.y - line1.y) * (line2.y - line1.y)));
   if (L2 == 0) return false;
   var r = (((pnt.x - line1.x) * (line2.x - line1.x)) + ((pnt.y - line1.y) * (line2.y - line1.y))) / L2;
