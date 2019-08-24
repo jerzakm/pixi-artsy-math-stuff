@@ -17,16 +17,16 @@ var stats = new Stats.default()
 stats.showPanel(0)
 document.body.appendChild(stats.dom)
 
-const helperCanvas = document.createElement('canvas')
-document.body.appendChild(helperCanvas)
-helperCanvas.width = renderer.renderer.width
-helperCanvas.height = renderer.renderer.height
-helperCanvas.style.position = 'fixed'
-helperCanvas.style.top = '0'
-helperCanvas.style.left = '0'
 
 
 // LISSAJOUS SETUP
+// const helperCanvas = document.createElement('canvas')
+// document.body.appendChild(helperCanvas)
+// helperCanvas.width = renderer.renderer.width
+// helperCanvas.height = renderer.renderer.height
+// helperCanvas.style.position = 'fixed'
+// helperCanvas.style.top = '0'
+// helperCanvas.style.left = '0'
 // const options: ILissajousTableOptions = {
 //     gridSize: 25,
 //     cellSize: 48,
