@@ -8,6 +8,7 @@ import { CirclePacking } from "./02_circlePacking/CirclePacking"
 import { GiftWrapping } from "./03_giftWrapping/GiftWrapping"
 import { Windmill } from "./04_windMill/Windmill";
 import { RadarFragment } from "./05_radarFragment/RadarFragment";
+import { FourierSeries } from "./06_fourierDrawing/FourierSeries";
 import { FourierDrawing } from "./06_fourierDrawing/FourierDrawing";
 
 renderer.initRenderer()
@@ -62,9 +63,14 @@ helperCanvas.style.left = '0'
 // radar.y = 50
 // renderer.stage.addChild(radar)
 
+// const fourierSeries = new FourierSeries()
+// fourierSeries.x = 300
+// fourierSeries.y = 300
+// renderer.stage.addChild(fourierSeries)
+
 const fourierDrawing = new FourierDrawing()
-fourierDrawing.x = 300
-fourierDrawing.y = 300
+fourierDrawing.x = 50
+fourierDrawing.y = 100
 renderer.stage.addChild(fourierDrawing)
 
 renderer.ticker.add((delta) => {
@@ -75,6 +81,7 @@ renderer.ticker.add((delta) => {
     // giftWrapping.animate(delta)
     // windmill.animate(delta)
     // radar.animate(delta)
+    // fourierSeries.animate(delta)
     fourierDrawing.animate(delta)
 
     stats.end()

@@ -1,5 +1,5 @@
 export const discreteFourierTransform = (x: number[]) => {
-  const X = []
+  const X: IFourierTransform[] = []
   const N = x.length
 
   for (let k = 0; k < N; k++) {
@@ -21,4 +21,12 @@ export const discreteFourierTransform = (x: number[]) => {
   }
 
   return X
+}
+
+export interface IFourierTransform {
+  re: number
+  im: number
+  freq: number
+  amp: number
+  phase: number
 }
