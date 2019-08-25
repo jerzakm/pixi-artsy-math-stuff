@@ -16,10 +16,10 @@ export class FourierDrawing extends Container {
   colours: string[]
   fourierX: IFourierTransform[]
   fourierY: IFourierTransform[]
-  debugCircles: Point[]
   state: FourierState
   color: Color
   lineWidth: number
+  offset: Point
 
   constructor() {
     super()
@@ -33,8 +33,9 @@ export class FourierDrawing extends Container {
     this.state = FourierState.RENDERING
     this.colours = []
     this.lineWidth = 3
+    this.offset = { x: 0, y: 0 }
 
-    this.debugCircles = []
+
     this.color = Color.rgb(200, 30, 0)
 
     this.setup()
@@ -61,14 +62,6 @@ export class FourierDrawing extends Container {
       .on('pointerup', this.drawEnd)
       .on('pointerupoutside', this.drawEnd)
       .on('pointermove', this.drawMove)
-  }
-
-  private drawDebugCircles() {
-    this.g.beginFill(0xAAFF88, 0.3)
-    for (const debugCircle of this.debugCircles) {
-      this.g.drawCircle(debugCircle.x, debugCircle.y, 20)
-    }
-    this.g.endFill()
   }
 
   private calculateFourierTransform() {
@@ -164,7 +157,6 @@ export class FourierDrawing extends Container {
       }
       this.g.lineStyle(0)
     }
-    this.drawDebugCircles()
   }
 
   private drawFourier() {
@@ -206,6 +198,16 @@ export class FourierDrawing extends Container {
       this.g.lineTo(this.path[i].x, this.path[i].y)
     }
 
+    this.g.lineStyle(0)
+
+    //drawing location highlight, lines from 2 epicycles and a circle
+    this.g.lineStyle(1, 0xEE9900, 0.3)
+    this.g.drawCircle(vx.x, vy.y, 15)
+    this.g.lineStyle(1, 0xFFFFFF, 0.1)
+    this.g.moveTo(vx.x, vx.y)
+    this.g.lineTo(vx.x, vy.y)
+    this.g.moveTo(vy.x, vy.y)
+    this.g.lineTo(vx.x, vy.y)
     this.g.lineStyle(0)
   }
 
