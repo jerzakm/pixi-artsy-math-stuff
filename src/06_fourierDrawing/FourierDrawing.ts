@@ -19,7 +19,7 @@ export class FourierDrawing extends Container {
   state: FourierState
   color: Color
   lineWidth: number
-  offset: Point
+  epicycleOffset: IEpicycleOffset
 
   constructor() {
     super()
@@ -33,7 +33,17 @@ export class FourierDrawing extends Container {
     this.state = FourierState.RENDERING
     this.colours = []
     this.lineWidth = 3
-    this.offset = { x: 0, y: 0 }
+
+    this.epicycleOffset = {
+      xOffset: {
+        x: 600,
+        y: 0
+      },
+      yOffset: {
+        x: 100,
+        y: 300
+      }
+    }
 
 
     this.color = Color.rgb(200, 30, 0)
@@ -68,28 +78,10 @@ export class FourierDrawing extends Container {
     const x: number[] = []
     const y: number[] = []
 
-    let smallestX
-    let largestX
-    let smallestY
-    let largetstY
-
-
     for (let i = 0; i < this.drawing.length; i++) {
-      x[i] = this.drawing[i].x
-      y[i] = this.drawing[i].y
-
-      !smallestX || x[i] < smallestX ? smallestX = x[i] : null
-      !smallestY || y[i] < smallestY ? smallestY = x[i] : null
-      !largestX || x[i] > largestX ? largestX = x[i] : null
-      !largetstY || y[i] > largetstY ? largetstY = x[i] : null
-    }
-
-    if (smallestX && smallestY && largestX && largetstY) {
-
-      for (let i = 0; i < this.drawing.length; i++) {
-        x[i] -= Math.abs(smallestX - largestX)
-        y[i] -= Math.abs(smallestY - largetstY)
-      }
+      //drawing location is offset by where the epicycles start from
+      x[i] = this.drawing[i].x - this.epicycleOffset.xOffset.x
+      y[i] = this.drawing[i].y - this.epicycleOffset.yOffset.y
     }
 
     this.path = []
@@ -168,10 +160,8 @@ export class FourierDrawing extends Container {
     const step = (2 * Math.PI) / this.fourierY.length
     this.angl += step
 
-    const start = { xx: 600, xy: 0, yx: 100, yy: 300 }
-
-    const vx = this.epicycle(start.xx, start.xy, 0, this.fourierX)
-    const vy = this.epicycle(start.yx, start.yy, Math.PI / 2, this.fourierY)
+    const vx = this.epicycle(this.epicycleOffset.xOffset.x, this.epicycleOffset.xOffset.y, 0, this.fourierX)
+    const vy = this.epicycle(this.epicycleOffset.yOffset.x, this.epicycleOffset.yOffset.y, Math.PI / 2, this.fourierY)
 
     const drawPoint = {
       x: vx.x,
@@ -229,4 +219,9 @@ export class FourierDrawing extends Container {
     this.g.lineStyle(0)
     return point
   }
+}
+
+interface IEpicycleOffset {
+  xOffset: Point
+  yOffset: Point
 }
