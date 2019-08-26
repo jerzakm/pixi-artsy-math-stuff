@@ -32,7 +32,7 @@ export class FourierDrawing extends Container {
     this.fourierY = []
     this.state = FourierState.RENDERING
     this.colours = []
-    this.lineWidth = 3
+    this.lineWidth = 2
 
     this.epicycleOffset = {
       xOffset: {
@@ -52,18 +52,9 @@ export class FourierDrawing extends Container {
   }
 
   private setup() {
-    const x: number[] = []
-    const y: number[] = []
-    const d = drawing
-    const step = 3
-    for (let i = 0; i < d.length; i += step) {
-      x.push(d[i].x)
-      y.push(d[i].y)
-    }
-    this.fourierX = discreteFourierTransform(x)
-    this.fourierY = discreteFourierTransform(y)
-    this.fourierX.sort((a, b) => b.amp - a.amp)
-    this.fourierY.sort((a, b) => b.amp - a.amp)
+    this.drawing = drawing
+
+    this.calculateFourierTransform(3)
 
     this.interactive = true
     this.buttonMode = true
@@ -74,14 +65,16 @@ export class FourierDrawing extends Container {
       .on('pointermove', this.drawMove)
   }
 
-  private calculateFourierTransform() {
+  private calculateFourierTransform(step: number) {
     const x: number[] = []
     const y: number[] = []
 
-    for (let i = 0; i < this.drawing.length; i++) {
+    for (let i = 0; i < this.drawing.length; i += step) {
       //drawing location is offset by where the epicycles start from
-      x[i] = this.drawing[i].x - this.epicycleOffset.xOffset.x
-      y[i] = this.drawing[i].y - this.epicycleOffset.yOffset.y
+      const newX = this.drawing[i].x - this.epicycleOffset.xOffset.x
+      const newY = this.drawing[i].y - this.epicycleOffset.yOffset.y
+      x.push(newX)
+      y.push(newY)
     }
 
     this.path = []
@@ -125,7 +118,7 @@ export class FourierDrawing extends Container {
         y: pos.y
       })
     }
-    this.calculateFourierTransform()
+    this.calculateFourierTransform(1)
     this.state = FourierState.RENDERING
     this.angl = 0
   }
@@ -138,9 +131,13 @@ export class FourierDrawing extends Container {
     }
 
     if (this.state === FourierState.RENDERING) {
-      this.drawFourier()
+      this.renderFourier()
     }
+    this.renderUserDrawing()
 
+  }
+
+  private renderUserDrawing() {
     if (this.state === FourierState.DRAWING && this.drawing.length > 1) {
       this.g.lineStyle(this.lineWidth, 0xAAFF22)
       this.g.moveTo(this.drawing[0].x, this.drawing[0].y)
@@ -151,7 +148,7 @@ export class FourierDrawing extends Container {
     }
   }
 
-  private drawFourier() {
+  private renderFourier() {
     //drawing helper
     this.g.beginFill(0x333333, 0.1)
     this.g.drawRect(-this.x, -this.y, screen.width, screen.height)

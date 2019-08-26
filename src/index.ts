@@ -18,7 +18,6 @@ stats.showPanel(0)
 document.body.appendChild(stats.dom)
 
 
-
 // LISSAJOUS SETUP
 // const helperCanvas = document.createElement('canvas')
 // document.body.appendChild(helperCanvas)
