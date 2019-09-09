@@ -31,6 +31,9 @@ uniform float scaleBrightnessR;
 uniform float scaleBrightnessG;
 uniform float scaleBrightnessB;
 
+uniform float tresholdA;
+uniform float tresholdB;
+
 uniform vec4 filterArea;
 
 vec2 mapCoord( vec2 coord )
@@ -69,7 +72,7 @@ void main(void)
       scaleBrightnessG* (p.g*p.g) +
       scaleBrightnessB* (p.b*p.b) );
 
-    float target_c = 0.2*floor(brightness/0.2);
+    float target_c = tresholdA*floor(brightness/tresholdB);
     vec3 tc = vec3(target_c*scaleR, target_c*1.0, target_c*1.0);
 
     gl_FragColor = vec4(tc, 1.0);
@@ -88,6 +91,9 @@ export class PixelLimitedColorFilter extends Filter {
     this.uniforms.scaleBrightnessR = options.scaleR ? options.scaleR : 0.299
     this.uniforms.scaleBrightnessG = options.scaleG ? options.scaleG : 0.587
     this.uniforms.scaleBrightnessB = options.scaleB ? options.scaleB : 0.114
+
+    this.uniforms.tresholdA = options.tresholdA ? options.tresholdA : 0.2
+    this.uniforms.tresholdB = options.tresholdB ? options.tresholdB : 0.2
   }
 
   get size() {
@@ -108,4 +114,6 @@ interface PixelLimitedColorWeights {
   scaleBrightnessR?: number
   scaleBrightnessG?: number
   scaleBrightnessB?: number
+  tresholdA?: number
+  tresholdB?: number
 }

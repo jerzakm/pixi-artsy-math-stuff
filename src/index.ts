@@ -25,6 +25,6 @@ const shaderPreview = initShaderPreview(renderer.stage)
 renderer.ticker.add((delta) => {
     stats.begin()
 
-
+    shaderPreview(delta)
     stats.end()
 })
