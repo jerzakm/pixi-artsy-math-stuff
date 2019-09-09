@@ -23,6 +23,14 @@ varying vec2 vTextureCoord;
 uniform vec2 size;
 uniform sampler2D uSampler;
 
+uniform float scaleR;
+uniform float scaleG;
+uniform float scaleB;
+
+uniform float scaleBrightnessR;
+uniform float scaleBrightnessG;
+uniform float scaleBrightnessB;
+
 uniform vec4 filterArea;
 
 vec2 mapCoord( vec2 coord )
@@ -54,25 +62,32 @@ void main(void)
 
     coord = unmapCoord(coord);
 
-    vec4 asd = texture2D(uSampler, coord);
+    vec4 p = texture2D(uSampler, coord);
 
     float brightness = sqrt(
-      0.299* (asd.r*asd.r) +
-      0.587* (asd.g*asd.g) +
-      0.114* (asd.b*asd.b) );
+      scaleBrightnessR* (p.r*p.r) +
+      scaleBrightnessG* (p.g*p.g) +
+      scaleBrightnessB* (p.b*p.b) );
 
     float target_c = 0.2*floor(brightness/0.2);
-    vec3 tc = vec3(target_c*1.0, target_c*1.0, target_c*1.0);
+    vec3 tc = vec3(target_c*scaleR, target_c*1.0, target_c*1.0);
 
     gl_FragColor = vec4(tc, 1.0);
 }
 `
 
-export class PixelShader extends Filter {
+export class PixelLimitedColorFilter extends Filter {
 
-  constructor(size = 10) {
+  constructor(size = 10, options: PixelLimitedColorWeights = {}) {
     super(vertex, fragment);
     this.size = size;
+    this.uniforms.scaleR = options.scaleR ? options.scaleR : 1.0
+    this.uniforms.scaleG = options.scaleG ? options.scaleG : 1.0
+    this.uniforms.scaleB = options.scaleB ? options.scaleB : 1.0
+
+    this.uniforms.scaleBrightnessR = options.scaleR ? options.scaleR : 0.299
+    this.uniforms.scaleBrightnessG = options.scaleG ? options.scaleG : 0.587
+    this.uniforms.scaleBrightnessB = options.scaleB ? options.scaleB : 0.114
   }
 
   get size() {
@@ -84,4 +99,13 @@ export class PixelShader extends Filter {
     }
     this.uniforms.size = value;
   }
+}
+
+interface PixelLimitedColorWeights {
+  scaleR?: number
+  scaleG?: number
+  scaleB?: number
+  scaleBrightnessR?: number
+  scaleBrightnessG?: number
+  scaleBrightnessB?: number
 }
