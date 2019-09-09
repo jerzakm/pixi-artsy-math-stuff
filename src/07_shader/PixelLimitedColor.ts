@@ -15,7 +15,6 @@ void main(void)
 }
 `
 
-
 const fragment = `
 precision mediump float;
 
@@ -63,7 +62,7 @@ void main(void)
       0.114* (asd.b*asd.b) );
 
     float target_c = 0.2*floor(brightness/0.2);
-    vec3 tc = vec3(target_c*1.2, target_c*0.8, target_c*0.8);
+    vec3 tc = vec3(target_c*1.0, target_c*1.0, target_c*1.0);
 
     gl_FragColor = vec4(tc, 1.0);
 }
@@ -86,46 +85,3 @@ export class PixelShader extends Filter {
     this.uniforms.size = value;
   }
 }
-
-// const fragment = `
-// precision mediump float;
-
-// varying vec2 vTextureCoord;
-
-// uniform vec2 size;
-// uniform sampler2D uSampler;
-
-// uniform vec4 filterArea;
-
-// vec2 mapCoord( vec2 coord )
-// {
-//     coord *= filterArea.xy;
-//     coord += filterArea.zw;
-
-//     return coord;
-// }
-
-// vec2 unmapCoord( vec2 coord )
-// {
-//     coord -= filterArea.zw;
-//     coord /= filterArea.xy;
-
-//     return coord;
-// }
-
-// vec2 pixelate(vec2 coord, vec2 size)
-// {
-// 	return floor( coord / size ) * size;
-// }
-
-// void main(void)
-// {
-//     vec2 coord = mapCoord(vTextureCoord);
-
-//     coord = pixelate(coord, size);
-
-//     coord = unmapCoord(coord);
-
-//     gl_FragColor = texture2D(uSampler, coord);
-// }
-// `
