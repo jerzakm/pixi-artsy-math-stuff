@@ -56,7 +56,7 @@ const buildFragmentShader = () => {
         float dist = mod(punto.y + grosor * 0.5 - sin(punto.x * frecuencia) * amplitud, divisor);
         float brillo = 0.3 * color.r + 0.4 * color.g + 0.3 * color.b;
 
-        if(dist < grosor && brillo < 0.75 - 0.12 * float(i))
+        if(dist < grosor && brillo < 0.75 - 0.22 * float(i))
         {
             // Suavizado
             float k = datosPatron[i].z;
@@ -66,8 +66,13 @@ const buildFragmentShader = () => {
         }
     }
 
-    float mx = 500.0;
-    gl_FragColor = vec4(gris, gris, gris, 1.0);
+    float alpha = 1.0;
+
+    // if(gris < 0.8) {
+    //   alpha = 0.1;
+    // }
+
+    gl_FragColor = vec4(gris*alpha, gris*alpha, gris*alpha, alpha);
   }
   `
 }

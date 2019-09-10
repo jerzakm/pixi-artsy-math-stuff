@@ -23,16 +23,24 @@ const update = (delta: number) => {
 
 }
 
+let imgSprite
+
 const makePreviewSprites = (parent: Container) => {
   loader
     .add('lk', 'lk.jpg')
     .add('v', 'sv3.mp4')
     .load(async () => {
-      const imgSprite = Sprite.from(loader.resources['lk'].texture)
+      imgSprite = Sprite.from(loader.resources['lk'].texture)
       imgSprite.x = 50
       parent.addChild(imgSprite)
 
-      sprites.push(imgSprite)
+      const filteredSprite = Sprite.from(loader.resources['lk'].texture)
+      filteredSprite.x = 50
+      parent.addChild(filteredSprite)
+
+
+
+      sprites.push(filteredSprite)
 
       const videoSource = new resources.VideoResource('sv3.mp4', {
         autoPlay: false,
@@ -52,7 +60,7 @@ const makePreviewSprites = (parent: Container) => {
         const vidSprite = Sprite.from(texture)
         vidSprite.scale.x = 0.5
         vidSprite.scale.y = 0.5
-        vidSprite.x = imgSprite.x + imgSprite.width
+        vidSprite.x = filteredSprite.x + filteredSprite.width
 
         parent.addChild(vidSprite)
         sprites.push(vidSprite)
@@ -74,13 +82,20 @@ const applyFilters = () => {
   const palette: RgbColor[] = []
   cga.map(c => palette.push(hexStringToRgb(c)))
 
+  imgSprite.filters = [
+    new PixiFilters.AdjustmentFilter({ brightness: 1.1, gamma: 1.5, contrast: 1.9, saturation: 0.5, red: 1.3, green: 0.8 }),
+    new PixiFilters.PixelateFilter(2),
+    new PaletteLimiterBuilder(palette),
+  ]
+
   for (const sprite of sprites) {
     sprite.filters = [
       // new PixiFilters.AdjustmentFilter({ brightness: 1.1, gamma: 1.5, contrast: 1.9, saturation: 0.5, red: 1.3, green: 0.8 }),
       // new PixiFilters.PixelateFilter(4),
       // new PaletteLimiterBuilder(palette),
       // new SelectiveDesaturate(),
-      new WaveyStripes()
+      new WaveyStripes(),
+      // new filters.AlphaFilter(0.3)
     ]
   }
 
