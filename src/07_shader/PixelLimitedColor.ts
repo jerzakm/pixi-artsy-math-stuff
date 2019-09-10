@@ -1,19 +1,5 @@
 import { Filter } from 'pixi.js'
-
-const vertex = `
-attribute vec2 aVertexPosition;
-attribute vec2 aTextureCoord;
-
-uniform mat3 projectionMatrix;
-
-varying vec2 vTextureCoord;
-
-void main(void)
-{
-    gl_Position = vec4((projectionMatrix * vec3(aVertexPosition, 1.0)).xy, 0.0, 1.0);
-    vTextureCoord = aTextureCoord;
-}
-`
+import { defaultVertexShader } from './shaderDefaults';
 
 const fragment = `
 precision mediump float;
@@ -73,7 +59,7 @@ void main(void)
       scaleBrightnessB* (p.b*p.b) );
 
     float target_c = tresholdA*floor(brightness/tresholdB);
-    vec3 tc = vec3(target_c*scaleR, target_c*1.0, target_c*1.0);
+    vec3 tc = vec3(target_c*scaleR, target_c*scaleG, target_c*scaleB);
 
     gl_FragColor = vec4(tc, 1.0);
 }
@@ -82,7 +68,7 @@ void main(void)
 export class PixelLimitedColorFilter extends Filter {
 
   constructor(size = 10, options: PixelLimitedColorWeights = {}) {
-    super(vertex, fragment);
+    super(defaultVertexShader, fragment);
     this.size = size;
     this.uniforms.scaleR = options.scaleR ? options.scaleR : 1.0
     this.uniforms.scaleG = options.scaleG ? options.scaleG : 1.0
