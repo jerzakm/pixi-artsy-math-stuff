@@ -17,10 +17,9 @@ renderer.initRenderer()
 
 var stats = new Stats.default()
 stats.showPanel(0)
-document.body.appendChild(stats.dom)
+// document.body.appendChild(stats.dom)
 
 const shaderPreview = initShaderPreview(renderer.stage)
-
 
 renderer.ticker.add((delta) => {
     stats.begin()
