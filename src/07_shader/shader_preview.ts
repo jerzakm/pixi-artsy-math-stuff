@@ -4,7 +4,7 @@ import { loader } from ".."
 import { PixelLimitedColorFilter } from "./PixelLimitedColor"
 import * as PixiFilters from 'pixi-filters'
 import { PaletteLimiter } from "./PaletteLimiter"
-import { PaletteLimiterBuilder } from "./PaletteLimiterBuilder";
+import { PaletteLimiterBuilder, RgbColor } from "./PaletteLimiterBuilder";
 
 
 
@@ -34,7 +34,7 @@ const makePreviewSprites = (parent: Container) => {
       // const videoSource = new resources.VideoResource('sv2.mp4', {
       //   autoPlay: false,
       //   autoLoad: true,
-      //   // updateFPS: 12
+      //   updateFPS: 12
       // });
 
       // if (videoSource.source instanceof HTMLVideoElement) {
@@ -44,12 +44,12 @@ const makePreviewSprites = (parent: Container) => {
 
       //   const texture = Texture.from(vs);
       //   const vidSprite = Sprite.from(texture)
-      //   vidSprite.scale.x = 0.7
-      //   vidSprite.scale.y = 0.7
-      //   vidSprite.x = imgSprite.width + imgSprite.x + 50
+      //   vidSprite.scale.x = 1
+      //   vidSprite.scale.y = 1
+      //   vidSprite.x =  50
 
       //   parent.addChild(vidSprite)
-      //   sprites.push(vidSprite)
+        // sprites.push(vidSprite)
       // }
 
       applyFilters()
@@ -59,27 +59,24 @@ const makePreviewSprites = (parent: Container) => {
 
 const applyFilters = () => {
 
-  // const palette = [0xFFFFFF, 0x000000, 0x00DD00]
-  // const floatPalette: Float32Array[] = []
+  const palette: RgbColor[] = [
+    {r: 255, g: 255, b: 255},
+    {r: 0, g: 0, b: 0},
+    {r: 220, g: 120, b:0}
+  ]  
 
-  // for (const color of palette) {
-  //   let f = new Float32Array(3)
-  //   utils.hex2rgb(color, f)
-  //   floatPalette.push(f)
-  // }
-
-  // const limiter = new PaletteLimiter(floatPalette)
   const bevel = new PixiFilters.BevelFilter()
   const pixelLimiter = new PixelLimitedColorFilter(6)
 
-  const limiterBuilder = new PaletteLimiterBuilder()
+  const limiterBuilder = new PaletteLimiterBuilder(palette)
   
 
   for (const sprite of sprites) {
     sprite.filters = [
       // pixelLimiter,
       // limiter,
-      limiterBuilder
+      limiterBuilder,
+      new PixiFilters.PixelateFilter(4)
     ]
   }
 
