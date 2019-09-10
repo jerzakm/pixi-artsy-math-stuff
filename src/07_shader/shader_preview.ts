@@ -7,6 +7,7 @@ import { PaletteLimiter } from "./PaletteLimiter"
 import { PaletteLimiterBuilder, RgbColor } from "./PaletteLimiterBuilder";
 import Color from 'color'
 import { SelectiveDesaturate } from "./SelectiveDesaturate"
+import { WaveyStripes } from "./WaveyStripes"
 
 
 
@@ -73,18 +74,13 @@ const applyFilters = () => {
   const palette: RgbColor[] = []
   cga.map(c => palette.push(hexStringToRgb(c)))
 
-  hexStringToRgb('#000000')
-
-  const limiterBuilder = new PaletteLimiterBuilder(palette)
-  const selectiveDesaturate = new SelectiveDesaturate()
-
-
   for (const sprite of sprites) {
     sprite.filters = [
       // new PixiFilters.AdjustmentFilter({ brightness: 1.1, gamma: 1.5, contrast: 1.9, saturation: 0.5, red: 1.3, green: 0.8 }),
       // new PixiFilters.PixelateFilter(4),
-      // limiterBuilder,
-      selectiveDesaturate
+      // new PaletteLimiterBuilder(palette),
+      // new SelectiveDesaturate(),
+      new WaveyStripes()
     ]
   }
 
