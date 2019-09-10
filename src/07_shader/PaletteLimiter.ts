@@ -61,22 +61,11 @@ void main(void)
 
 export class PaletteLimiter extends Filter {
 
-
   constructor(palette: Float32Array[]) {
     super(vertex, fragment);
 
     this.uniforms.palette = palette
 
-
   }
 
-  get size() {
-    return this.uniforms.size;
-  }
-  set size(value) {
-    if (typeof value === 'number') {
-      value = [value, value];
-    }
-    this.uniforms.size = value;
-  }
 }

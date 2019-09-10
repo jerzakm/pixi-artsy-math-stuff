@@ -4,6 +4,7 @@ import { loader } from ".."
 import { PixelLimitedColorFilter } from "./PixelLimitedColor"
 import * as PixiFilters from 'pixi-filters'
 import { PaletteLimiter } from "./PaletteLimiter"
+import { PaletteLimiterBuilder } from "./PaletteLimiterBuilder";
 
 
 
@@ -58,28 +59,28 @@ const makePreviewSprites = (parent: Container) => {
 
 const applyFilters = () => {
 
-  const palette = [0xFFFFFF, 0x000000, 0x00DD00]
-  const floatPalette: Float32Array[] = []
+  // const palette = [0xFFFFFF, 0x000000, 0x00DD00]
+  // const floatPalette: Float32Array[] = []
 
-  for (const color of palette) {
-    let f = new Float32Array(3)
-    utils.hex2rgb(color, f)
-    floatPalette.push(f)
-  }
+  // for (const color of palette) {
+  //   let f = new Float32Array(3)
+  //   utils.hex2rgb(color, f)
+  //   floatPalette.push(f)
+  // }
 
-  const limiter = new PaletteLimiter(floatPalette)
+  // const limiter = new PaletteLimiter(floatPalette)
   const bevel = new PixiFilters.BevelFilter()
-  const pixelLimiter = new PixelLimitedColorFilter(8)
+  const pixelLimiter = new PixelLimitedColorFilter(6)
+
+  const limiterBuilder = new PaletteLimiterBuilder()
+  
 
   for (const sprite of sprites) {
     sprite.filters = [
       // pixelLimiter,
-      limiter
+      // limiter,
+      limiterBuilder
     ]
   }
-
-  console.log(bevel)
-  console.log(limiter)
-  console.log(pixelLimiter.program)
 
 }
