@@ -11,7 +11,7 @@ const buildFragmentShader = (palette: RgbColor[]) => {
   let parsedPalette = ``
 
   for (const color of palette) {
-    parsedPalette += `TRY(${color.r / 255}, ${color.g / 255}, ${color.g / 255});\n`
+    parsedPalette += `TRY(${color.r / 255}, ${color.g / 255}, ${color.b / 255});\n`
   }
 
   return `
