@@ -46,22 +46,19 @@ export class CirclePacking extends Container {
     if (this.lastPop > this.popFrequency) {
       if (this.popLimit && this.circles.length < this.popLimit) {
         this.populate()
-        this.populate()
-        this.populate()
-        this.populate()
-        this.populate()
-        this.populate()
       }
       this.lastPop = 0
     } else {
       this.lastPop += delta
     }
 
+    this.g.clear()
     this.g.beginFill(0xFFFFFF)
     this.g.lineStyle(2, 0x121212)
-    this.g.clear()
     for (const circle of this.circles) {
-      this.g.drawCircle(circle.x, circle.y, circle.r)
+      if (circle.r > 25) {
+        this.g.drawCircle(circle.x, circle.y, circle.r)
+      }
     }
     this.g.endFill()
   }
