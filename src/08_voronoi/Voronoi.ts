@@ -83,10 +83,3 @@ export class Voronoi extends Container {
 
 
 }
-
-
-interface IRadarSegment {
-  angle: number
-  length: number
-  distance: number
-}

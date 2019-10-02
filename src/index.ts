@@ -11,6 +11,7 @@ import { FourierSeries } from "./06_fourierDrawing/FourierSeries";
 import { FourierDrawing } from "./06_fourierDrawing/FourierDrawing";
 import { initShaderPreview } from "./07_shader/shader_preview"
 import { Voronoi } from "./08_voronoi/Voronoi"
+import { HexTree } from "./09_hextree/HexTree"
 
 export const loader = Loader.shared
 
@@ -26,14 +27,18 @@ document.body.appendChild(stats.dom)
 // const circlePacking = new CirclePacking()
 // renderer.stage.addChild(circlePacking)
 
-const voronoi = new Voronoi()
-renderer.stage.addChild(voronoi)
+// const voronoi = new Voronoi()
+// renderer.stage.addChild(voronoi)
+
+const hexTree = new HexTree()
+renderer.stage.addChild(hexTree)
 
 renderer.ticker.add((delta) => {
     stats.begin()//
     // circlePacking.animate(delta)
     // fourier.animate(delta)
-    voronoi.animate(delta)
+    // voronoi.animate(delta)
     // shaderPreview(delta)
+    hexTree.animate(delta)
     stats.end()
 })
