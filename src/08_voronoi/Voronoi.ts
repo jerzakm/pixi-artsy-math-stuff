@@ -1,12 +1,14 @@
 import { Container, Graphics, interaction } from "pixi.js";
 import { Point, findPointWithAngle } from "../math/coordMath";
+import * as voronoi from 'voronoi'
 
 export class Voronoi extends Container {
   g: Graphics
   points: Point[] = []
-  cells = 50
+  cells = 10
   sizeX = 1000
-  sizeY = 600
+  sizeY = 1000
+  v = new voronoi.default()
 
   constructor() {
     super()
@@ -14,6 +16,10 @@ export class Voronoi extends Container {
     this.addChild(this.g)
     this.genPoints()
     this.interaction()
+    const bbox = { xl: 0, xr: this.sizeX, yt: 0, yb: this.sizeY }; // xl is x-left, xr is x-right, yt is y-top, and yb is y-bottom
+    const sites = this.points
+    const vc = this.v.compute(sites, bbox)
+    console.log(vc.cells)
   }
 
   private genPoints() {
@@ -48,6 +54,31 @@ export class Voronoi extends Container {
       this.g.drawCircle(point.x, point.y, 2)
     }
     this.g.endFill()
+
+    const bbox = { xl: 0, xr: this.sizeX, yt: 0, yb: this.sizeY }; // xl is x-left, xr is x-right, yt is y-top, and yb is y-bottom
+    const sites = this.points
+    const vc = this.v.compute(sites, bbox)
+
+    this.g.lineStyle(3, 0xEEAA11)
+    // for (const edge of vc.edges) {
+    //   this.g.moveTo(edge.va.x, edge.va.y)
+    //   this.g.lineTo(edge.vb.x, edge.vb.y)
+    // }
+
+    const poly = []
+    for (const cell of vc.cells) {
+      for (const halfedge of cell.halfedges) {
+        this.g.moveTo(halfedge.edge.va.x, halfedge.edge.va.y)
+        this.g.lineTo(halfedge.edge.vb.x, halfedge.edge.vb.y)
+        // const start = halfedge.getStartpoint()
+        // const end = halfedge.getEndpoint()
+        // poly.push(start.x, start.y, end.x, end.y)
+      }
+    }
+
+    // this.g.drawPolygon(poly)
+
+    this.g.lineStyle(0)
   }
 
 
