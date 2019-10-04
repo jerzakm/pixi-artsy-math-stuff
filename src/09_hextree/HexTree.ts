@@ -7,8 +7,8 @@ export class HexTree extends Container {
   g: Graphics
   root: HexTreeNode
   hexSize = 30
-  hexPoly = calcHexPoints(this.hexSize, this.hexSize * Math.sqrt(3), false)
-  baseDistance = 60
+  hexPoly = calcHexPoints(this.hexSize, this.hexSize * Math.sqrt(3), true)
+  baseDistance = 240
 
   constructor() {
     super()
@@ -41,10 +41,16 @@ export class HexTree extends Container {
     currentGen += 1
     for (const p of hex.points) {
       const angle = calcAngleBetweenPoints({ x: 0, y: 0 }, p)
-      const position = findPointWithAngle(hex.position, angle, this.baseDistance + this.baseDistance)
+      const position = findPointWithAngle(hex.position, angle, this.baseDistance * currentGen)
 
-      const newNode = this.makeNewNode(hex, position, angle - 30)
-      this.root.children.push(newNode)
+      const newNode = this.makeNewNode(hex, position, angle + 30)
+
+      const nDist = distanceBetweenPoints(position, this.root.position)
+      const oDist = distanceBetweenPoints(hex.position, this.root.position)
+
+      if (nDist > oDist) {
+        this.root.children.push(newNode)
+      }
       if (currentGen < maxGen) {
         this.generate(newNode)
       }
